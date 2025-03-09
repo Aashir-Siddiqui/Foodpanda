@@ -1,0 +1,508 @@
+:root {
+    --black: #000000;
+    --grey: #707070;
+    --lightgrey: #a6a6a6;
+    --pink: #e21b70;
+    --bluishgrey: #171f26;
+    --whitishgrey: #f7f7f7;
+    --white: #ffffff;
+    --lightpink: #ff2b85;
+    --blakishgrey: #333333;
+    --lightbluishgrey: #39434d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+body {
+    /* box-sizing: border-box; */
+    overflow-x: hidden;
+}
+
+/* Container-1 */
+.cont-1 {
+    height: 64px;
+    width: 100vw;
+    background-color: var(--pink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.cont-1 .bag-img {
+    height: 50px;
+    width: 50px;
+}
+
+.cont-1 button {
+    height: 48px;
+    padding: 0px 15px;
+    background-color: var(--pink);
+    color: var(--white);
+    border: 1px solid var(--white);
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.cont-1 button:hover {
+    background-color: var(--whitishgrey);
+    color: var(--grey);
+}
+
+.close-logo {
+    position: absolute;
+    right: 24px;
+    top: 8px;
+    cursor: pointer;
+}
+
+/* Container-2 */
+.cont-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 100%;
+    box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.16);
+    position: sticky;
+    top: 64px;
+    /* Height of cont-1 */
+    z-index: 999;
+    /* Slightly below cont-1 */
+    background-color: var(--white);
+
+}
+
+.header {
+    height: 64px;
+    width: 100%;
+    max-width: 1440px;
+    padding: 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Foodpanda-logo {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0px 0px 0px 30px;
+    width: 50%;
+}
+
+.Foodpanda-logo img {
+    height: 30px;
+    width: 30px;
+}
+
+.Foodpanda-logo h3 {
+    font-weight: 100;
+    color: var(--pink);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 24px;
+    width: 50%;
+}
+
+.login {
+    width: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.log-in-btn {
+    outline: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: var(--white);
+    border: 1px solid var(--lightbluishgrey);
+    color: var(--lightbluishgrey);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.log-in-btn:hover {
+    background-color: var(--whitishgrey);
+    padding: 12px 16px;
+}
+
+.signup {
+    width: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-up-btn {
+    outline: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: var(--lightpink);
+    border: 1px solid var(--lightpink);
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.sign-up-btn:hover {
+    background-color: var(--pink);
+    padding: 12px 16px;
+}
+
+.cart {
+    width: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart a {
+    margin-top: 10px;
+    background: none;
+    padding: 0px;
+    border-radius: 0%;
+}
+
+.cart a:hover {
+    background: var(--whitishgrey);
+    padding: 6px;
+    border-radius: 50%;
+}
+
+/* Container-3 */
+.cont-3 {
+    height: 513px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: var(--whitishgrey);
+    overflow: hidden;
+}
+
+.cont-3-main {
+    max-width: 1440px;
+    height: 513px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cont-3-main img {
+    height: 100%;
+    position: absolute;
+    right: -200px;
+    bottom: 0;
+}
+
+.cont-3 h1 {
+    padding: 0px 0px 0px 30px;
+    font-size: 40px;
+    font-weight: 500;
+    width: 630px;
+    position: absolute;
+    top: 100px;
+}
+
+
+/* Container-4 */
+.cont-4 {
+    width: 100vw;
+    margin-top: 30px;
+}
+
+.cont-4 h1 {
+    padding-left: 20px;
+    font-weight: 800;
+}
+
+
+/* Container-5 */
+.cont-5 {
+    height: 400px;
+    width: 100vw;
+    /* width: 100vw; */
+    background-image: url('images/cont-5\ -img.webp');
+    background-size: cover;
+    background-position: center;
+    margin-top: 20px;
+    position: relative;
+}
+
+.cont-5 div {
+    height: 300px;
+    width: 570px;
+    box-shadow: 0px 0px 7px;
+    border-radius: 8px;
+    position: absolute;
+    top: 260px;
+    left: 60px;
+    background-color: var(--white);
+    padding: 20px 0px 0px 19px;
+}
+
+.cont-5 div p {
+    font-size: 20px;
+}
+
+.cont-5 div button {
+    background-color: var(--pink);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 12px 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+
+/* COntainer-6 */
+.cont-6 {
+    width: 100vw;
+    margin-top: 200px;
+}
+
+.cont-6 h1 {
+    padding-left: 20px;
+    font-weight: 800;
+}
+
+@media (max-width:1050px) {
+    .cont-3 {
+        height: 400px;
+    }
+}
+
+@media (max-width:815px) {
+    .cont-3 {
+        height: 260px;
+    }
+
+    .cont-3 img {
+        right: -60px;
+    }
+
+    .cont-3 h1 {
+        top: 60px;
+        font-size: 30px;
+        width: 500px;
+    }
+
+    .cont-4 h1 {
+        font-size: 26px;
+    }
+
+    .cont-5 div p {
+        font-size: 15px;
+    }
+
+    .cont-5 div {
+        height: 240px;
+        width: 400px;
+        top: 250px;
+    }
+
+    .cont-5 h2 {
+        font-size: 17px;
+    }
+
+    .cont-5 div button {
+        padding: 8px 11px;
+        font-size: 12px;
+    }
+
+    .cont-6 h1 {
+        font-size: 26px;
+    }
+
+    .cont-6 {
+        margin-top: 130px;
+    }
+}
+
+@media (max-width:750px) {
+    .cont-1 {
+        font-size: 14px;
+    }
+
+    .cont-1 button {
+        height: 39px;
+        padding: 0px 6px;
+        font-size: 12px;
+    }
+
+    .cont-1 .bag-img {
+        height: 42px;
+        width: 42px;
+    }
+
+    .cont-3 img {
+        height: 80%;
+        right: -80px;
+    }
+
+    .cont-3 h1 {
+        top: 70px;
+        font-size: 25px;
+        width: 400px;
+    }
+
+    .cont-4 h1 {
+        font-size: 23px;
+    }
+
+    .cont-5 div {
+        top: 200px;
+        left: 10px;
+    }
+
+    .cont-6 h1 {
+        font-size: 23px;
+    }
+
+    .cont-6 {
+        margin-top: 80px;
+    }
+}
+
+@media (max-width:600px) {
+    .cont-1 .bag-img {
+        display: none;
+    }
+
+    .cont-3 img {
+        height: 70%;
+        right: -60px;
+    }
+
+    .cont-4 h1 {
+        font-size: 20px;
+    }
+
+    .cont-5 div p {
+        font-size: 11px;
+    }
+
+    .cont-5 div {
+        height: 200px;
+        width: 340px;
+        top: 260px
+    }
+
+    .cont-5 h2 {
+        font-size: 14px;
+    }
+
+    .cont-6 h1 {
+        font-size: 20px;
+    }
+
+    .cont-6 {
+        margin-top: 90px;
+    }
+}
+
+@media (max-width:515px) {
+    .cont-1 {
+        font-size: 12px;
+        gap: 10px;
+
+    }
+
+    .cont-1 button {
+        height: 39px;
+        padding: 0px 3px;
+        font-size: 10px;
+    }
+
+    .cont-1 .close-logo {
+        right: 15px;
+    }
+
+    .cont-3 img {
+        height: 65%;
+        right: -50px;
+    }
+
+    .cont-3 h1 {
+        font-size: 20px;
+        top: 70px;
+        width: 320px;
+
+    }
+
+    .cont-4 h1 {
+        font-size: 17px;
+    }
+
+    .cont-5 div p {
+        font-size: 10px;
+    }
+
+    .cont-5 div {
+        height: 190px;
+        width: 300px;
+    }
+
+    .cont-5 h2 {
+        font-size: 12px;
+    }
+
+    .cont-6 h1 {
+        font-size: 17px;
+    }
+
+}
+
+@media (max-width:430px) {
+    .cont-1 {
+        font-size: 10px;
+        gap: 8px;
+
+    }
+
+    .cont-1 button {
+        height: 35px;
+        padding: 0px 2px;
+        font-size: 8px;
+    }
+
+    .cont-3 img {
+        height: 60%;
+        right: -40px;
+    }
+
+    .cont-3 h1 {
+        width: 280px;
+    }
+
+    .cont-4 h1 {
+        font-size: 14px;
+    }
+
+    .cont-5 div {
+        width: 250px;
+    }
+
+    .cont-6 h1 {
+        font-size: 14px;
+    }
+}
