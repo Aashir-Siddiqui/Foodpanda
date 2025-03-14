@@ -6,24 +6,30 @@
     <link rel="shortcut icon" type="x-icon" href="foodpanda-logo.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food & Grocery Delivery</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <title>Foodpanda</title>
 </head>
 
 <body>
     <!-- Container-1 -->
-    <div class="cont-1">
-        <img src="https://micro-assets.foodora.com/img/ic-rider-icon.svg" class="bag-img">
-        <h3>Do you need a bussiness account?</h3>
-        <button>SIGN UP NOW</button>
-        <img src="images/close btn.svg" class="close-logo"></a>
-    </div>
-    </div>
+    <header class="cont-1">
+        <div class="cont-1-content">
+            <img src="https://micro-assets.foodora.com/img/ic-rider-icon.svg" class="bag-img">
+            <h3>Do you need a bussiness account?</h3>
+            <button>SIGN UP NOW</button>
+            <img src="images/close btn.svg" class="close-logo"></a>
+        </div>
+    </header>
 
 
     <!-- Container-2 -->
-    <div class="cont-2">
-        <header class="header">
+    <nav class="cont-2">
+        <div class="header">
             <div class="Foodpanda-logo">
                 <img src="images/foodpanda-logo.png">
                 <h3>foodpanda</h3>
@@ -36,53 +42,114 @@
                     <button class="sign-up-btn"> Sign Up</button>
                 </div>
                 <div class="cart">
-                    <a href=""><img
-                            src="images/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgY2xhc3M9ImZsLW5vbmUiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGwtc.svg"></a>
+                    <a href=""><img src="images/carticon.svg"></a>
                 </div>
             </div>
-        </header>
-    </div>
+        </div>
+    </nav>
 
 
     <!-- Container-3 -->
-    <div class="cont-3">
+    <section class="cont-3">
         <div class="cont-3-main">
-            <h1>Enjoy <span id="autowriting" style="color:#E21B70"></span></h1>
+            <h1>Enjoy <span id="autowriting" style="color:#ff2b85"></span></h1>
             <img src="images/cont-3-img.webp">
         </div>
-    </div>
+    </section>
 
 
     <!-- Container-4 -->
-    <div class="cont-4">
-        <h1>You prepare the food, we handle the rest</h1>
-    </div>
+    <section class="cont-4">
+        <div class="cont-4-content">
+            <h1>You prepare the food, we handle the rest</h1>
+        </div>
+    </section>
 
 
     <!-- Container-5 -->
-    <div class="cont-5">
-        <div>
-            <h2>List your restaurant or shop on foodpanda</h2>
-            <br>
-            <p>Would you like millions of new customers to enjoy your amazing food and groceries? So would we!</p>
-            <br>
-            <p>It's simple: we list your menu and product lists online, help you process orders, pick them up, and
-                deliver them to hungry pandas – in a heartbeat!</p>
-            <br>
-            <p>Interested? Let's start our partnership today!</p>
-            <br>
-            <button>
-                Get Started
-            </button>
+    <section class="cont-5">
+        <div class="cont-5-content">
+            <div class="cont-5-text-content">
+                <h2>List your restaurant or shop on foodpanda</h2>
+                <br>
+                <p>Would you like millions of new customers to enjoy your amazing food and groceries? So would we!</p>
+                <p>It's simple: we list your menu and product lists online, help you process orders, pick them up, and
+                    deliver them to hungry pandas – in a heartbeat!</p>
+                <p>Interested? Let's start our partnership today!</p>
+                <button class="started-btn">Get Started</button>
+            </div>
         </div>
-    </div>
+    </section>
 
 
     <!-- Container-6 -->
-    <div class="cont-6">
-        <h1>Put us in your pocket</h1>
-    </div>
+    <section class="cont-4">
+        <div class="cont-4-content">
+            <h1 class="changeH1">Put us in your pocket</h1>
+        </div>
+    </section>
 
+    <!-- Container-7 -->
+    <section class="cont-7">
+        <div class="cont-7-main">
+            <div class="app-icon-section">
+                <h2>Download the food and groceries you love</h2>
+                <div class="app-section-QR-Code">
+                    <div class="QR-Code">
+                        <img src="images/pkhomepageqrcode.png">
+                    </div>
+                    <p>It's all at your fingertips – the restaurants and <br> shops you love. Find the right food and
+                        <br> groceries to suit your mood, and make the <br> first bite last. Go ahead, download us.
+                    </p>
+                </div>
+                <div class="app-section-icon">
+                    <img src="images/app.strore.svg">
+                    <img src="images/googleplay.svg">
+                    <img src="images/explore.svg">
+                </div>
+            </div>
+            <div class="app-phone-section">
+                <div class="app-phone">
+                    <img src="images/home-foodpanda-apps.png">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Container-8 -->
+    <section class="cont-4">
+        <div class="cont-4-content">
+            <h1>Take your office out to lunch</h1>
+        </div>
+    </section>
+
+    <!-- Container-9 -->
+    <section class="cont-9">
+        <div class="cont-9-content">
+            <div class="cont-5-text-content">
+                <h2>foodpanda for business</h2>
+                <br>
+                <p>Order lunch or fuel for work-from-home, late nights in the office, corporate events, client meetings,
+                    and much more.</p>
+                <button class="started-btn">Get Started</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Container-10 -->
+    <section class="cont-10">
+        <div class="cont-10-main">
+            <div class="cont-10-text-contain">
+                <h1>Feed your team.</h1>
+                <p>Treat your talented team to their favourite meals. Let them pick! Explore flexible corporate food
+                    delivery options and tasty employee perks.</p>
+                    <button class="learn-more">Learn more</button>
+            </div>
+            <div class="cont-10-img">
+                <img src="images/foodpanda-home-3.jpg">
+            </div>
+        </div>
+    </section>
 
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <script src="app.js"></script>
