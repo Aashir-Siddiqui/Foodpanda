@@ -53,8 +53,7 @@ body {
 }
 
 .cont-1 button {
-    height: 48px;
-    padding: 0px 15px;
+    padding: 8px 16px;
     background-color: var(--lightpink);
     color: var(--white);
     border: 1px solid var(--white);
@@ -169,7 +168,6 @@ body {
     color: var(--white);
     cursor: pointer;
     font-weight: 600;
-    font-style: 12px;
 }
 
 .sign-up-btn:hover {
@@ -233,10 +231,10 @@ body {
 }
 
 .cont-3-text-content {
-    padding: 0px 0px 0px 30px;
+    padding: 0px 0px 0px 32px;
     font-size: 32px;
     font-weight: 700;
-    width: 630px;
+    width: 700px;
 }
 
 
@@ -287,7 +285,7 @@ body {
 .cont-5-text-content {
     position: absolute;
     top: 40px;
-    margin-left: 30px;
+    margin-left: 32px;
     width: 570px;
     border-radius: 16px;
     background-color: var(--white);
@@ -335,10 +333,11 @@ body {
     border-radius: 16px;
     color: var(--white);
     width: 100%;
-    margin: 0px 30px 80px 30px;
+    margin: 0px 30px 100px 30px;
     display: flex;
     align-items: center;
     gap: 20px;
+    height: 325px;
 }
 
 .app-icon-section {
@@ -386,17 +385,20 @@ body {
 
 .app-phone-section {
     width: 50%;
-    position: relative;
+    /* position: relative; */
 }
 
 .app-phone {
-    min-height: 327px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .app-phone img {
-    position: absolute;
+    /* position: absolute;
     margin-top: -100px;
-    max-height: 521px;
+    max-height: 521px; */
+    width: 100%;
     max-width: 656px;
 }
 
@@ -424,7 +426,7 @@ body {
 .cont-9-text-content {
     position: absolute;
     top: 100px;
-    margin-left: 30px;
+    margin-left: 32px;
     width: 570px;
     border-radius: 16px;
     background-color: var(--white);
@@ -464,6 +466,7 @@ body {
     display: flex;
     align-self: center;
     flex-direction: column;
+    padding-right: 20px;
 }
 
 .cont-10-text-contain h1 {
@@ -513,7 +516,6 @@ body {
 }
 
 .footer-contain {
-    height: 64px;
     width: 100%;
     max-width: 1440px;
     padding: 0 64px;
@@ -586,31 +588,48 @@ body {
     .nav {
         padding: 0 32px;
     }
+
     .nav-right {
         padding-right: 0px;
+        gap: 10px;
     }
+
     .Foodpanda-logo {
         padding: 0px;
     }
 
     .login {
-        width: 20%;
+        width: 14%;
     }
 
     .log-in-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .log-in-btn:hover {
         padding: 6px 12px;
     }
 
     .signup {
-        width: 20%;
+        width: 14%;
     }
 
     .sign-up-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .sign-up-btn:hover {
         padding: 6px 12px;
     }
 
     .panda-img {
-        margin-right: 0px;
+        margin-right: -75px;
+    }
+
+    .cont-3-text-content {
+        width: 60%;
     }
 
     .cont-4-content {
@@ -635,15 +654,11 @@ body {
         margin-bottom: 16px;
     }
 
-    .app-phone {
-        min-height: 0px;
-    }
-
-    .app-phone img {
-        width: 110%;
-        top: -195px;
+    /* .app-phone img {
+        width: 100%;
+        top: 84px;
         right: 0px;
-    }
+    } */
 
     .cont-10 {
         padding: 0 32px;
@@ -664,13 +679,388 @@ body {
     .cont-10-img img {
         width: 100%;
     }
+
     .footer-contain {
         padding: 0 32px;
     }
+
     .footer-logos {
         padding-left: 0px;
     }
+
     .footer-icons {
         padding-right: 20px;
+    }
+}
+
+@media (max-width:1080px) {
+    .login {
+        width: 18%;
+    }
+
+    .log-in-btn {
+        font-size: 10px;
+    }
+
+    .signup {
+        width: 18%;
+    }
+
+    .sign-up-btn {
+        font-size: 10px;
+    }
+
+    .cont-3-text-content {
+        font-size: 24px;
+        width: 55%;
+    }
+
+    .panda-img {
+        margin-right: 0px;
+    }
+
+    .cont-5-text-content p {
+        line-height: 1.5rem;
+        font-size: 14px;
+    }
+
+    .cont-7-main {
+        gap: 0px;
+        height: 235px;
+    }
+
+    .app-icon-section {
+        padding-bottom: 0px;
+        padding-top: 0px;
+    }
+
+    .app-icon-section h2 {
+        font-size: 16px;
+    }
+
+    .app-section-QR-Code {
+        display: block;
+        width: 75%;
+    }
+
+    .QR-Code img {
+        display: none;
+    }
+
+    .app-section-QR-Code p {
+        font-size: 14px;
+        line-height: 1.5rem;
+        margin-top: 0px;
+    }
+
+    .app-section-icon {
+        gap: 15px;
+    }
+
+    .app-section-icon img {
+        width: 30%;
+    }
+
+    .app-phone img {
+        width: 100%;
+    }
+
+    .cont-9-text-content p {
+        line-height: 1.5rem;
+        font-size: 14px;
+    }
+
+    .cont-10-text-contain p {
+        font-size: 14px;
+        line-height: 1.5rem;
+    }
+}
+
+@media (max-width:780px) {
+    .cont-1-content {
+        padding: 0px 32px;
+        justify-content: normal;
+        gap: 25px;
+    }
+
+    .cont-1 .bag-img {
+        display: none;
+    }
+
+    .cont-1-content h3 {
+        font-size: 14px;
+    }
+
+    .cont-1 button {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .login {
+        width: 28%;
+    }
+
+    .signup {
+        width: 28%;
+    }
+
+    .cont-3-text-content {
+        font-size: 18px;
+        width: 50%;
+    }
+
+    .cont-4-content h1 {
+        font-size: 20px;
+    }
+
+    .cont-5 {
+        margin-bottom: 200px;
+    }
+
+    .cont-5-text-content {
+        width: 50%;
+    }
+
+    .cont-5-text-content h2 {
+        font-size: 14px;
+        line-height: 1.3rem;
+    }
+
+    .cont-5-text-content p {
+        line-height: 1.3rem;
+        font-size: 12px;
+    }
+
+    .cont-7 {
+        margin: 0px 0px 100px 0px;
+    }
+
+    .cont-7-main {
+        height: 360px;
+        flex-direction: column;
+        margin: 0px 0px 80px 0px;
+    }
+
+    .app-icon-section {
+        width: 100%;
+        padding-bottom: 32px;
+        padding-left: 50px;
+        padding-top: 32px;
+    }
+
+    .app-section-icon {
+        gap: 8px;
+    }
+
+    .app-section-icon img {
+        width: 20%;
+    }
+
+    .app-phone img {
+        width: 110%;
+    }
+
+    .cont-9 {
+        margin-bottom: 200px;
+    }
+
+    .started-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .cont-9-text-content {
+        width: 50%;
+    }
+
+    .cont-9-text-content h2 {
+        font-size: 14px;
+        line-height: 1.3rem;
+    }
+
+    .cont-9-text-content p {
+        line-height: 1.3rem;
+        font-size: 12px;
+    }
+
+    .cont-10-main {
+        display: block;
+    }
+
+    .cont-10-text-contain {
+        width: 100%;
+    }
+
+    .learn-more {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .cont-10-img img {
+        margin-top: 40px;
+    }
+
+    .footer-contain {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footer-foodpanda-logo {
+        border-right: none;
+    }
+
+    .footer-icons {
+        padding: 0px 0px 0px 0px;
+    }
+}
+
+@media (max-width:480px) {
+    .cont-1-content {
+        padding: 0px 16px;
+        justify-content: normal;
+        gap: 15px;
+    }
+
+    .cont-1 button {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .close-logo {
+        right: 10px;
+        top: 10px;
+        width: 12px;
+    }
+
+    .nav {
+        padding: 0 16px;
+    }
+
+    .Foodpanda-logo {
+        padding: 0px;
+    }
+
+    .nav-right {
+        padding-right: 0px;
+        gap: 10px;
+    }
+
+    .login {
+        width: 28%;
+    }
+
+    .log-in-btn {
+        font-size: 8px;
+    }
+
+    .signup {
+        width: 32%;
+    }
+
+    .sign-up-btn {
+        font-size: 8px;
+    }
+
+    .cart {
+        width: 18%;
+        justify-content: flex-end;
+    }
+
+    .cart a {
+        padding: 16px;
+    }
+
+    .cart a img {
+        position: absolute;
+        top: 5px;
+        left: 4px;
+    }
+
+    .cont-3-text-content {
+        padding: 0px 0px 0px 16px;
+        font-size: 12px;
+    }
+
+    .cont-4-content {
+        padding-left: 16px;
+    }
+
+    .cont-4-content h1 {
+        font-size: 16px;
+    }
+
+    .cont-5 {
+        margin-bottom: 220px;
+    }
+
+    .cont-5-text-content {
+        margin-left: 16px;
+    }
+
+    .cont-5-text-content h2 {
+        font-size: 14px;
+    }
+
+    .cont-5-text-content p {
+        line-height: 1.3rem;
+        font-size: 10px;
+        padding: 4px 0;
+    }
+
+    .started-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .cont-7 {
+        padding: 0 16px;
+        margin: 0px 0px 0px 0px;
+    }
+
+    .cont-7-main {
+        margin: 0px 0px 60px 0px;
+    }
+
+    .app-section-QR-Code p {
+        font-size: 12px;
+        line-height: 1.3rem;
+    }
+
+    .app-section-icon {
+        gap: 8px;
+    }
+
+    .cont-9 {
+        margin-bottom: 120px;
+    }
+
+    .cont-9-text-content {
+        margin-left: 16px;
+    }
+
+    .cont-9-text-content h2 {
+        font-size: 14px;
+    }
+
+    .app-phone img {
+        width: 150%;
+    }
+
+    .cont-9-text-content p {
+        line-height: 1.3rem;
+        font-size: 10px;
+        padding: 4px 0;
+    }
+
+    .cont-10 {
+        padding: 0 16px;
+    }
+
+    .cont-10 {
+        padding: 0 16px;
+    }
+
+    .cont-10-text-contain h1 {
+        font-size: 28px;
     }
 }
