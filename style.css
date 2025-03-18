@@ -810,7 +810,7 @@ body {
     }
 
     .cont-4-content h1 {
-        font-size: 20px;
+        font-size: 28px;
     }
 
     .cont-5 {
@@ -818,34 +818,40 @@ body {
     }
 
     .cont-5-text-content {
-        width: 50%;
+        width: 70%;
     }
 
     .cont-5-text-content h2 {
-        font-size: 14px;
-        line-height: 1.3rem;
+        font-size: 24px;
     }
 
     .cont-5-text-content p {
         line-height: 1.3rem;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .cont-7 {
-        margin: 0px 0px 100px 0px;
-    }
-
-    .cont-7-main {
-        height: 360px;
-        flex-direction: column;
         margin: 0px 0px 80px 0px;
     }
 
+    .cont-7-main {
+        height: 470px;
+        flex-direction: column;
+    }
+
     .app-icon-section {
-        width: 100%;
+        width: 90%;
         padding-bottom: 32px;
-        padding-left: 50px;
-        padding-top: 32px;
+        padding-left: 10px;
+        padding-top: 20px;
+    }
+
+    .app-icon-section h2 {
+        font-size: 24px;
+    }
+
+    .app-section-QR-Code p {
+        font-size: 18px;
     }
 
     .app-section-icon {
@@ -870,17 +876,16 @@ body {
     }
 
     .cont-9-text-content {
-        width: 50%;
+        width: 70%;
     }
 
     .cont-9-text-content h2 {
-        font-size: 14px;
-        line-height: 1.3rem;
+        font-size: 24px;
     }
 
     .cont-9-text-content p {
         line-height: 1.3rem;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .cont-10-main {
@@ -889,11 +894,7 @@ body {
 
     .cont-10-text-contain {
         width: 100%;
-    }
-
-    .learn-more {
-        padding: 8px 16px;
-        font-size: 14px;
+        padding-right: 0px;
     }
 
     .cont-10-img img {
@@ -929,7 +930,7 @@ body {
     .close-logo {
         right: 10px;
         top: 10px;
-        width: 12px;
+        width: 10px;
     }
 
     .nav {
@@ -986,24 +987,22 @@ body {
     }
 
     .cont-4-content h1 {
-        font-size: 16px;
-    }
-
-    .cont-5 {
-        margin-bottom: 220px;
+        font-size: 18px;
     }
 
     .cont-5-text-content {
         margin-left: 16px;
+        padding: 20px;
+        top: 70px;
     }
 
     .cont-5-text-content h2 {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .cont-5-text-content p {
         line-height: 1.3rem;
-        font-size: 10px;
+        font-size: 12px;
         padding: 4px 0;
     }
 
@@ -1018,11 +1017,16 @@ body {
     }
 
     .cont-7-main {
-        margin: 0px 0px 60px 0px;
+        height: 350px;
+    }
+
+    .app-icon-section h2 {
+        margin-bottom: 20px;
+        font-size: 16px;
     }
 
     .app-section-QR-Code p {
-        font-size: 12px;
+        font-size: 11px;
         line-height: 1.3rem;
     }
 
@@ -1030,16 +1034,22 @@ body {
         gap: 8px;
     }
 
+    .app-section-icon img {
+        width: 25%;
+    }
+
     .cont-9 {
-        margin-bottom: 120px;
+        margin-bottom: 150px;
     }
 
     .cont-9-text-content {
         margin-left: 16px;
+        padding: 20px;
+        top: 115px;
     }
 
     .cont-9-text-content h2 {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .app-phone img {
@@ -1048,7 +1058,7 @@ body {
 
     .cont-9-text-content p {
         line-height: 1.3rem;
-        font-size: 10px;
+        font-size: 12px;
         padding: 4px 0;
     }
 
@@ -1061,6 +1071,33 @@ body {
     }
 
     .cont-10-text-contain h1 {
-        font-size: 28px;
+        font-size: 24px;
+    }
+
+    .learn-more {
+        font-size: 12px;
+        width: 100px;
+        height: 35px;
+    }
+
+    .footer {
+        padding: 20px 0;
+    }
+
+    .footer-contain {
+        padding: 0 16px;
+    }
+
+    .footer-foodpanda-logo img {
+        height: 25px;
+        width: 25px;
+    }
+
+    .footer-foodpanda-logo h3 {
+        font-size: 18px;
+    }
+
+    .delivery-logo img {
+        width: 90%;
     }
 }
