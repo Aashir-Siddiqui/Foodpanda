@@ -19,7 +19,114 @@
 
 body {
     overflow-x: hidden;
+
 }
+
+/* SignUp PopUp*/
+#Signup-cont {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+
+#Signup-Popup {
+    height: 400px;
+    width: 350px;
+    background-color: white;
+    box-shadow: 0px 0px 7px;
+    position: fixed;
+    top: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+
+
+
+}
+
+#Signup-Popup div {
+    margin-bottom: 10px;
+}
+
+.inputs-cont {
+    height: 40px;
+    width: 200px;
+    border: 2px solid black;
+
+}
+
+#pass-input {
+    position: static;
+}
+
+.inputs-cont input {
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0px 0px 0px 4px;
+    position: relative;
+    font-size: 15px;
+}
+
+#pass-input input {
+    top: 0px;
+
+}
+
+#pass-input span {
+    position: relative;
+    top: 8px;
+    cursor: pointer;
+}
+
+#pass-input span img {
+    height: 24px;
+    width: 24px;
+}
+
+#SignupWithEmailAndPassBtn button {
+    padding: 8px 20px;
+    background-color: var(--lightpink);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+}
+
+#LoginGoogle-cont {
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+#LoginGoogle-cont button {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+}
+
+#LoginGoogle-cont img {
+    height: 20px;
+    width: 20px;
+}
+
+#Signup-Popup #close-popup {
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    cursor: pointer;
+    padding: 5px;
+
+}
+
 
 /* Container-1 */
 .cont-1 {
@@ -1099,5 +1206,9 @@ body {
 
     .delivery-logo img {
         width: 90%;
+    }
+    #Signup-Popup {
+        height: 350px;
+        width: 280px;
     }
 }
