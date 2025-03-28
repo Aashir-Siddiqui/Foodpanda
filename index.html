@@ -17,7 +17,33 @@
 </head>
 
 <body>
+
+    <!-- SignUp PopUp -->
+        <div id="Signup-cont">
+            <div id="Signup-Popup">
+                <span id="close-popup">
+                    <img src="images/close btn.svg" >
+                </span>
+                <div id="email-input" class="inputs-cont">
+                    <input type="email" placeholder=" john32@gmail.com" id="s-email">
+                </div>
+                <div id="pass-input" class="inputs-cont">
+                    <input type="password" placeholder=" password" id="s-pass">
+                    <span id="hidden-pass"><img id="visible-eye"  src="images/visible eye.png" ></span>
+                </div>
+                <div id="SignupWithEmailAndPassBtn">
+                    <button id="signupByE&PBtn">Sign Up</button>
+                </div>
+                <div class="inputs-cont" id="LoginGoogle-cont">
+                    <button id="LoginGoogle">LogIn With Google</button>
+                    <img src="images/google logo.png">
+                </div>
+            </div>
+        </div>
+
+    
     <!-- Container-1 -->
+    <div class="FrontPage">
     <header class="cont-1">
         <div class="cont-1-content">
             <img src="images/ic-rider-icon.svg" class="bag-img">
@@ -124,7 +150,6 @@
         </div>
     </section>
 
-
     <!-- Container-8 -->
     <section class="cont-4">
         <div class="cont-4-content">
@@ -186,10 +211,10 @@
             </div>
         </div>
     </footer>
-
-
+</div>
+    <script src="firebase.js" type="module"></script>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js" type="module"></script>
 </body>
 
 </html>
