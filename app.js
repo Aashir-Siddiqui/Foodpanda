@@ -12,3 +12,4 @@ new Typed("#autowriting", {
     backSpeed: 100,
     loop: true
 })
+
