@@ -1,8 +1,24 @@
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc, getDoc } from "./firebase.js";
 
+const supabaseUrl = "https://bulaegqaunxdcxiwhphf.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1bGFlZ3FhdW54ZGN4aXdocGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzY3MzMsImV4cCI6MjA1OTQ1MjczM30.348sIaMgJYtjj6cLcnivey4QZg8CEeBT_Q02hQYm43c";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
 const showWarning = (title, text) => Swal.fire({ icon: "warning", title, text });
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        const idToken = await user.getIdToken();
+        const { data, error } = await supabase.auth.setSession({ access_token: idToken });
+        if (error) {
+            console.error("Supabase Auth Error:", error);
+        } else {
+            console.log("Supabase session set with Firebase UID:", user.uid);
+        }
+    }
+});
 
 document.querySelectorAll(".toggle-password").forEach(toggle => {
     toggle.addEventListener("click", () => {
@@ -98,93 +114,116 @@ document.querySelectorAll(".switch-form").forEach(switchLink => {
     });
 });
 
-document.getElementById("signupBtn").addEventListener("click", () => {
-    const email = signupCont.querySelector("#su-email");
-    const password = signupCont.querySelector("#su-password");
+document.getElementById("signupBtn").addEventListener("click", async () => {
+    const email = signupCont.querySelector("#su-email").value;
+    const password = signupCont.querySelector("#su-password").value;
 
-    if (!email.value || !password.value) {
+    if (!email || !password) {
         return showError("Missing Fields", "Please enter email and password!");
     }
 
-    if (password.value.length < 6) {
-        return showError("Weak Password", `Password must be at least 6 characters long! Current length: ${password.value.length}`);
+    if (password.length < 6) {
+        return showError("Weak Password", `Password must be at least 6 characters long! Current length: ${password.length}`);
     }
 
     console.log("Signup Role:", currentRole);
 
-    createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            return setDoc(doc(db, "users", user.uid), {
-                email: user.email,
-                role: currentRole,
-                createdAt: new Date().getTime()
-            }).then(() => {
-                showSuccess("Signup Successful", `Welcome, ${user.email}!`);
-                return Swal.close();
-            }).then(() => {
-                showSuccess("Signup Successful", `Welcome, ${user.email}!`)
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            setTimeout(() => {
-                                signupCont.style.display = "none";
-                                body.style.overflowY = "auto";
-                                frontPage.style.opacity = "1";
-                                frontPage.style.pointerEvents = "auto";
-                                if (currentRole === "admin") {
-                                    window.location.href = '/admin.html';
-                                } else {
-                                    window.location.href = '/restaurant.html';
-                                }
-                            }, 1000);
-                        }
-                    });
-            });
-        })
-        .catch((error) => {
-            showError("Signup Failed", error.message);
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Firebase Signup Successful, UID:", user.uid);
+
+        const idToken = await user.getIdToken();
+        const { data: authData, error: authError } = await supabase.auth.setSession({ access_token: idToken });
+        if (authError) {
+            throw new Error("Supabase Auth Error: " + authError.message);
+        }
+        console.log("Supabase session set with Firebase UID:", user.uid);
+
+        await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: currentRole,
+            createdAt: new Date().getTime()
         });
+        console.log("Firestore Data Saved:", { email: user.email, role: currentRole });
+
+        const { data, error } = await supabase
+            .from("firebase_users")
+            .insert([
+                {
+                    uid: user.uid,
+                    role: currentRole,
+                    created_at: new Date().toISOString()
+                }
+            ]);
+
+        if (error) {
+            throw new Error("Supabase Insert Error: " + error.message);
+        }
+        console.log("Supabase Insert Response:", { data, error });
+
+        showSuccess("Signup Successful", `Welcome, ${user.email}!`).then((result) => {
+            if (result.isConfirmed) {
+                setTimeout(() => {
+                    signupCont.style.display = "none";
+                    body.style.overflowY = "auto";
+                    frontPage.style.opacity = "1";
+                    frontPage.style.pointerEvents = "auto";
+                    if (currentRole === "admin") {
+                        window.location.href = '/admin.html';
+                    } else {
+                        window.location.href = '/restaurant.html';
+                    }
+                }, 1000);
+            }
+        });
+    } catch (error) {
+        console.error("Signup Error:", error);
+        showError("Signup Failed", error.message);
+    }
 });
 
-document.getElementById("loginBtn").addEventListener("click", () => {
-    const email = loginCont.querySelector("#li-email");
-    const password = loginCont.querySelector("#li-password");
+document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = loginCont.querySelector("#li-email").value;
+    const password = loginCont.querySelector("#li-password").value;
 
-    if (!email.value || !password.value) {
+    if (!email || !password) {
         return showError("Missing Fields", "Please enter email and password!");
     }
 
-    signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log("User Logged In:", user.uid, user.email);
-            return getDoc(doc(db, "users", user.uid)).then((docSnap) => {
-                if (docSnap.exists()) {
-                    const role = docSnap.data().role;
-                    console.log("User Role from Firestore:", role);
-                    showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
-                        if (result.isConfirmed) {
-                            setTimeout(() => {
-                                loginCont.style.display = "none";
-                                body.style.overflowY = "auto";
-                                frontPage.style.opacity = "1";
-                                frontPage.style.pointerEvents = "auto";
-                                if (role === "admin") {
-                                    window.location.href = '/admin.html';
-                                } else if (role === "user") {
-                                    window.location.href = '/restaurant.html';
-                                } else {
-                                    console.warn("Invalid role detected:", role);
-                                    window.location.href = '/restaurant.html';
-                                }
-                            }, 1000);
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Firebase Login Successful, UID:", user.uid);
+
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        if (docSnap.exists()) {
+            const role = docSnap.data().role;
+            console.log("Firestore Role:", role);
+
+            showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(() => {
+                        loginCont.style.display = "none";
+                        body.style.overflowY = "auto";
+                        frontPage.style.opacity = "1";
+                        frontPage.style.pointerEvents = "auto";
+                        if (role === "admin") {
+                            window.location.href = '/admin.html';
+                        } else if (role === "user") {
+                            window.location.href = '/restaurant.html';
+                        } else {
+                            console.warn("Invalid role detected:", role);
+                            window.location.href = '/restaurant.html';
                         }
-                    });
+                    }, 1000);
                 }
             });
-        })
-        .catch((error) => {
-            console.error("Login Error:", error.code, error.message);
-            showError("Login Failed", error.message);
-        });
+        } else {
+            throw new Error("User data not found in Firestore. Please sign up again.");
+        }
+    } catch (error) {
+        console.error("Login Error:", error.code, error.message);
+        showError("Login Failed", error.message);
+    }
 });
