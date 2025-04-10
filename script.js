@@ -1,5 +1,3 @@
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc, getDoc } from "./firebase.js";
-
 const supabaseUrl = "https://bulaegqaunxdcxiwhphf.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1bGFlZ3FhdW54ZGN4aXdocGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzY3MzMsImV4cCI6MjA1OTQ1MjczM30.348sIaMgJYtjj6cLcnivey4QZg8CEeBT_Q02hQYm43c";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -8,17 +6,10 @@ const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
 const showWarning = (title, text) => Swal.fire({ icon: "warning", title, text });
 
-auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        const idToken = await user.getIdToken();
-        const { data, error } = await supabase.auth.setSession({ access_token: idToken });
-        if (error) {
-            console.error("Supabase Auth Error:", error);
-        } else {
-            console.log("Supabase session set with Firebase UID:", user.uid);
-        }
-    }
-});
+const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
 
 document.querySelectorAll(".toggle-password").forEach(toggle => {
     toggle.addEventListener("click", () => {
@@ -122,6 +113,10 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
         return showError("Missing Fields", "Please enter email and password!");
     }
 
+    if (!validateEmail(email)) {
+        return showError("Invalid Email", "Please enter a valid email address!");
+    }
+
     if (password.length < 6) {
         return showError("Weak Password", `Password must be at least 6 characters long! Current length: ${password.length}`);
     }
@@ -129,29 +124,27 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
     console.log("Signup Role:", currentRole);
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log("Firebase Signup Successful, UID:", user.uid);
-
-        const idToken = await user.getIdToken();
-        const { data: authData, error: authError } = await supabase.auth.setSession({ access_token: idToken });
-        if (authError) {
-            throw new Error("Supabase Auth Error: " + authError.message);
-        }
-        console.log("Supabase session set with Firebase UID:", user.uid);
-
-        await setDoc(doc(db, "users", user.uid), {
-            email: user.email,
-            role: currentRole,
-            createdAt: new Date().getTime()
+        const { data: userData, error: signupError } = await supabase.auth.signUp({
+            email: email,
+            password: password,
         });
-        console.log("Firestore Data Saved:", { email: user.email, role: currentRole });
+        if (signupError) {
+            throw new Error("Supabase Signup Error: " + signupError.message);
+        }
+        const user = userData.user;
+        console.log("Supabase Signup Successful, UID:", user.id);
+
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !sessionData.session) {
+            throw new Error("Supabase Session Error: " + (sessionError?.message || "Session not found"));
+        }
+        console.log("Supabase Session Set:", sessionData.session.user.id);
 
         const { data, error } = await supabase
             .from("firebase_users")
             .insert([
                 {
-                    uid: user.uid,
+                    uid: user.id,
                     role: currentRole,
                     created_at: new Date().toISOString()
                 }
@@ -191,39 +184,59 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
         return showError("Missing Fields", "Please enter email and password!");
     }
 
+    if (!validateEmail(email)) {
+        return showError("Invalid Email", "Please enter a valid email address!");
+    }
+
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log("Firebase Login Successful, UID:", user.uid);
-
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists()) {
-            const role = docSnap.data().role;
-            console.log("Firestore Role:", role);
-
-            showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
-                if (result.isConfirmed) {
-                    setTimeout(() => {
-                        loginCont.style.display = "none";
-                        body.style.overflowY = "auto";
-                        frontPage.style.opacity = "1";
-                        frontPage.style.pointerEvents = "auto";
-                        if (role === "admin") {
-                            window.location.href = '/admin.html';
-                        } else if (role === "user") {
-                            window.location.href = '/restaurant.html';
-                        } else {
-                            console.warn("Invalid role detected:", role);
-                            window.location.href = '/restaurant.html';
-                        }
-                    }, 1000);
-                }
-            });
-        } else {
-            throw new Error("User data not found in Firestore. Please sign up again.");
+        const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+        if (loginError) {
+            throw new Error("Supabase Login Error: " + loginError.message);
         }
+        const user = userData.user;
+        console.log("Supabase Login Successful, UID:", user.id);
+
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !sessionData.session) {
+            throw new Error("Supabase Session Error: " + (sessionError?.message || "Session not found"));
+        }
+        console.log("Supabase Session Set:", sessionData.session.user.id);
+
+        const { data: userRoleData, error: roleError } = await supabase
+            .from("firebase_users")
+            .select("role")
+            .eq("uid", user.id)
+            .single();
+
+        if (roleError || !userRoleData) {
+            throw new Error("User role not found in Supabase. Please sign up again.");
+        }
+        const role = userRoleData.role;
+        console.log("Supabase Role:", role);
+
+        showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
+            if (result.isConfirmed) {
+                setTimeout(() => {
+                    loginCont.style.display = "none";
+                    body.style.overflowY = "auto";
+                    frontPage.style.opacity = "1";
+                    frontPage.style.pointerEvents = "auto";
+                    if (role === "admin") {
+                        window.location.href = '/admin.html';
+                    } else if (role === "user") {
+                        window.location.href = '/restaurant.html';
+                    } else {
+                        console.warn("Invalid role detected:", role);
+                        window.location.href = '/restaurant.html';
+                    }
+                }, 1000);
+            }
+        });
     } catch (error) {
-        console.error("Login Error:", error.code, error.message);
+        console.error("Login Error:", error);
         showError("Login Failed", error.message);
     }
 });

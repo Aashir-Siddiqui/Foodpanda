@@ -1251,8 +1251,33 @@ body.dimmed {
     padding-left: 30px;
 }
 
-@media (max-width:1480px){
-    .cont-restaurant h2{
+@media (max-width:1480px) {
+    .cont-restaurant h2 {
         padding-left: 0px;
     }
+}
+
+#restaurantList .card {
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#restaurantList .card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+#restaurantList .card-body {
+    padding: 16px;
+}
+
+#restaurantList .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+#restaurantList .card-text {
+    color: var(--blakishgrey);
 }
