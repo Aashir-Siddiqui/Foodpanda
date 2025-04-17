@@ -13,3 +13,12 @@ new Typed("#autowriting", {
     loop: true
 })
 
+function scrollShadow() {
+    const navbar = document.getElementById("navbar");
+    if (window.scrollY > 0) {
+        navbar.classList.add("boxShadow");
+    } else {
+        navbar.classList.remove("boxShadow");
+    }
+}
+window.addEventListener('scroll', scrollShadow);
