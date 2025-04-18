@@ -48,6 +48,14 @@ const loadDishes = async () => {
             dishesShowList.innerHTML += card;
         });
 
+        document.querySelectorAll(".btn-heart").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const heartIcon = btn.querySelector("i");
+                heartIcon.classList.toggle("fa-regular");
+                heartIcon.classList.toggle("fa-solid");
+            });
+        });
+
         document.querySelectorAll(".btn-cart").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 const dishId = e.target.closest(".btn-cart").dataset.id;
