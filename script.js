@@ -1,6 +1,4 @@
-const supabaseUrl = "https://bulaegqaunxdcxiwhphf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1bGFlZ3FhdW54ZGN4aXdocGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzY3MzMsImV4cCI6MjA1OTQ1MjczM30.348sIaMgJYtjj6cLcnivey4QZg8CEeBT_Q02hQYm43c";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc, onAuthStateChanged, getDoc } from './firebase.js';
 
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
@@ -124,36 +122,15 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
     console.log("Signup Role:", currentRole);
 
     try {
-        const { data: userData, error: signupError } = await supabase.auth.signUp({
-            email: email,
-            password: password,
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Firebase Signup Successful, UID:", user.uid);
+
+        await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            role: currentRole,
+            created_at: new Date().toISOString()
         });
-        if (signupError) {
-            throw new Error("Supabase Signup Error: " + signupError.message);
-        }
-        const user = userData.user;
-        console.log("Supabase Signup Successful, UID:", user.id);
-
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !sessionData.session) {
-            throw new Error("Supabase Session Error: " + (sessionError?.message || "Session not found"));
-        }
-        console.log("Supabase Session Set:", sessionData.session.user.id);
-
-        const { data, error } = await supabase
-            .from("firebase_users")
-            .insert([
-                {
-                    uid: user.id,
-                    role: currentRole,
-                    created_at: new Date().toISOString()
-                }
-            ]);
-
-        if (error) {
-            throw new Error("Supabase Insert Error: " + error.message);
-        }
-        console.log("Supabase Insert Response:", { data, error });
+        console.log("Firestore User Role Saved");
 
         showSuccess("Signup Successful", `Welcome, ${user.email}!`).then((result) => {
             if (result.isConfirmed) {
@@ -165,7 +142,7 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
                     if (currentRole === "admin") {
                         window.location.href = '/admin.html';
                     } else {
-                        window.location.href = '/restaurant.html';
+                        window.location.href = '/dishes.html';
                     }
                 }, 1000);
             }
@@ -189,33 +166,15 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     }
 
     try {
-        const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-        if (loginError) {
-            throw new Error("Supabase Login Error: " + loginError.message);
-        }
-        const user = userData.user;
-        console.log("Supabase Login Successful, UID:", user.id);
+        const { user } = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Firebase Login Successful, UID:", user.uid);
 
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !sessionData.session) {
-            throw new Error("Supabase Session Error: " + (sessionError?.message || "Session not found"));
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+            throw new Error("User role not found in Firestore. Please sign up again.");
         }
-        console.log("Supabase Session Set:", sessionData.session.user.id);
-
-        const { data: userRoleData, error: roleError } = await supabase
-            .from("firebase_users")
-            .select("role")
-            .eq("uid", user.id)
-            .single();
-
-        if (roleError || !userRoleData) {
-            throw new Error("User role not found in Supabase. Please sign up again.");
-        }
-        const role = userRoleData.role;
-        console.log("Supabase Role:", role);
+        const role = userDoc.data().role;
+        console.log("Firestore Role:", role);
 
         showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
             if (result.isConfirmed) {
@@ -227,10 +186,10 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
                     if (role === "admin") {
                         window.location.href = '/admin.html';
                     } else if (role === "user") {
-                        window.location.href = '/restaurant.html';
+                        window.location.href = '/dishes.html';
                     } else {
                         console.warn("Invalid role detected:", role);
-                        window.location.href = '/restaurant.html';
+                        window.location.href = '/dishes.html';
                     }
                 }, 1000);
             }

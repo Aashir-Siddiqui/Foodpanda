@@ -14,7 +14,7 @@ new Typed("#autowriting", {
 })
 
 function scrollShadow() {
-    const navbar = document.getElementById("navbar");
+    const navbar = document.getElementById("navbarShadow");
     if (window.scrollY > 0) {
         navbar.classList.add("boxShadow");
     } else {
