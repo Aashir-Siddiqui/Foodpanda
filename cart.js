@@ -3,6 +3,26 @@ import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orde
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
 
+const updateCartNumber = async () => {
+    const cartNumElements = document.querySelectorAll(".cart-num");
+    if (!cartNumElements.length) return;
+
+    try {
+        const q = query(collection(db, `users/${auth.currentUser.uid}/cart`));
+        const querySnapshot = await getDocs(q);
+        let totalQuantity = 0;
+        querySnapshot.forEach(doc => {
+            totalQuantity += doc.data().quantity || 1;
+        });
+        cartNumElements.forEach(el => {
+            el.textContent = totalQuantity;
+        });
+        console.log("Cart number updated:", totalQuantity);
+    } catch (error) {
+        console.error("Error updating cart number:", error);
+    }
+};
+
 const loadCart = async () => {
     const cartList = document.getElementById("cartList");
     const cartTotal = document.getElementById("cartTotal");
@@ -46,6 +66,7 @@ const loadCart = async () => {
                             <div class="card-body">
                                 <h5 class="card-title">${dish.name}</h5>
                                 <p class="card-text"><strong>Price:</strong> PKR ${dish.price}</p>
+                                <p class="card-text"><strong>Category:</strong> ${dish.category}</p>
                                 <p class="card-text quantity" data-id="${cartDoc.id}"><strong>Quantity:</strong> ${quantity}</p>
                                 <p class="card-text"><strong>Total:</strong> PKR ${itemTotal}</p>
                                 <div class="cart-Btns">
@@ -70,6 +91,7 @@ const loadCart = async () => {
                     await deleteDoc(doc(db, `users/${auth.currentUser.uid}/cart`, cartItemId));
                     showSuccess("Removed", "Item removed from cart!");
                     loadCart();
+                    await updateCartNumber();
                 } catch (error) {
                     showError("Error", `Failed to remove item: ${error.message}`);
                 }
@@ -93,6 +115,7 @@ window.increment = async (cartItemId) => {
                 added_at: new Date().toISOString()
             });
             loadCart();
+            await updateCartNumber();
         }
     } catch (error) {
         showError("Error", `Failed to increment quantity: ${error.message}`);
@@ -114,6 +137,7 @@ window.decrement = async (cartItemId) => {
                 await deleteDoc(cartDocRef);
             }
             loadCart();
+            await updateCartNumber();
         }
     } catch (error) {
         showError("Error", `Failed to decrement quantity: ${error.message}`);
@@ -128,22 +152,30 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             console.log("User authenticated, UID:", user.uid);
             loadCart();
+            updateCartNumber();
         }
     });
 });
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-    try {
-        await signOut(auth);
-        showSuccess("Logout", "You have been logged out.").then((result) => {
-            if (result.isConfirmed) {
-                setTimeout(() => {
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    Swal.fire({
+        icon: "warning",
+        title: "Confirm Logout",
+        text: "Are you sure you want to logout?",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            signOut(auth)
+                .then(() => {
+                    showSuccess("Logged Out", "You have been successfully logged out.");
                     window.location.href = "/index.html";
-                }, 1000);
-            }
-        })
-    } catch (error) {
-        console.error("Logout error:", error);
-        showError("Logout Error", error.message);
-    }
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                    showError("Logout Error", error.message);
+                });
+        }
+    });
 });

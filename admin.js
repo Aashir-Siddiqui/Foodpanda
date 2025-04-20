@@ -40,7 +40,7 @@ const loadDishes = async () => {
                             <h5 class="card-title">${dish.name}</h5>
                             <p class="card-text"><strong>Price:</strong> PKR ${dish.price}</p>
                             <p class="card-text"><strong>Category:</strong> ${dish.category}</p>
-                            <p class="card-text">${dish.description}</p>
+                            <p class="card-text card-des">${dish.description}</p>
                         </div>
                     </div>
                 </div>
@@ -48,6 +48,8 @@ const loadDishes = async () => {
             dishesList.innerHTML += card;
         });
 
+        addReadMoreFunctionality()
+        
         document.querySelectorAll(".btn-edit").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 const dishId = e.currentTarget.dataset.id;
@@ -73,7 +75,7 @@ const loadDishes = async () => {
 
         document.querySelectorAll(".btn-delete").forEach(btn => {
             btn.addEventListener("click", async (e) => {
-                const dishId = e.target.dataset.id;
+                const dishId = e.currentTarget.dataset.id;
                 Swal.fire({
                     title: "Are you sure?",
                     text: "This dish will be deleted permanently!",
@@ -108,6 +110,28 @@ const loadDishes = async () => {
         }
     }
 };
+
+function addReadMoreFunctionality() {
+    document.querySelectorAll('.card-des').forEach(p => {
+        const existingLink = p.nextElementSibling?.classList.contains('read-more-link') ? p.nextElementSibling : null;
+        if (existingLink) existingLink.remove();
+
+        const isLongText = p.scrollHeight > p.clientHeight || p.textContent.length > 100;
+        if (isLongText) {
+            const readMoreLink = document.createElement('a');
+            readMoreLink.classList.add('read-more-link');
+            readMoreLink.textContent = 'Read More';
+            readMoreLink.href = '#';
+            p.insertAdjacentElement('afterend', readMoreLink);
+
+            readMoreLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                p.classList.toggle('expanded');
+                readMoreLink.textContent = p.classList.contains('expanded') ? 'Read Less' : 'Read More';
+            });
+        }
+    });
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Admin page loaded");
@@ -218,18 +242,25 @@ document.getElementById("updateDishBtn").addEventListener("click", async () => {
     }
 });
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-    try {
-        await signOut(auth);
-        showSuccess("Logout", "You have been logged out.").then((result) => {
-            if (result.isConfirmed) {
-                setTimeout(() => {
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    Swal.fire({
+        icon: "warning",
+        title: "Confirm Logout",
+        text: "Are you sure you want to logout?",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            signOut(auth)
+                .then(() => {
+                    showSuccess("Logged Out", "You have been successfully logged out.");
                     window.location.href = "/index.html";
-                }, 1000);
-            }
-        })
-    } catch (error) {
-        console.error("Logout error:", error);
-        showError("Logout Error", error.message);
-    }
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                    showError("Logout Error", error.message);
+                });
+        }
+    });
 });

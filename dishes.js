@@ -3,6 +3,26 @@ import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orde
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
 
+const updateCartNumber = async () => {
+    const cartNumElements = document.querySelectorAll(".cart-num");
+    if (!cartNumElements.length) return;
+
+    try {
+        const q = query(collection(db, `users/${auth.currentUser.uid}/cart`));
+        const querySnapshot = await getDocs(q);
+        let totalQuantity = 0;
+        querySnapshot.forEach(doc => {
+            totalQuantity += doc.data().quantity || 1;
+        });
+        cartNumElements.forEach(el => {
+            el.textContent = totalQuantity;
+        });
+        console.log("Cart number updated:", totalQuantity);
+    } catch (error) {
+        console.error("Error updating cart number:", error);
+    }
+};
+
 const loadDishes = async () => {
     const dishesShowList = document.getElementById("dishesShowList");
     if (!dishesShowList) {
@@ -40,7 +60,7 @@ const loadDishes = async () => {
                             <h5 class="card-title">${dish.name}</h5>
                             <p class="card-text"><strong>Price:</strong> PKR ${dish.price}</p>
                             <p class="card-text"><strong>Category:</strong> ${dish.category}</p>
-                            <p class="card-text">${dish.description}</p>
+                            <p class="card-text card-des">${dish.description}</p>
                         </div>
                     </div>
                 </div>
@@ -71,21 +91,24 @@ const loadDishes = async () => {
                             quantity: currentQuantity + 1,
                             added_at: new Date().toISOString()
                         });
-                        showSuccess("Updated Cart", `Quantity of ${cartDoc.data().dishId} increased!`);
+                        showSuccess("Updated Cart", `Quantity increased!`);
                     } else {
                         await addDoc(cartRef, {
                             dishId,
                             quantity: 1,
                             added_at: new Date().toISOString()
                         });
-                        showSuccess("Added to Cart", `Dish ID ${dishId} added to your cart!`);
+                        showSuccess("Added to Cart", `Dish added to your cart!`);
                     }
+                    await updateCartNumber();
                 } catch (error) {
                     console.error("Error adding to cart:", error);
                     showError("Error", `Failed to add to cart: ${error.message}`);
                 }
             });
         });
+
+        addReadMoreFunctionality();
     } catch (error) {
         console.error("Error loading dishes:", error);
         dishesShowList.innerHTML = "";
@@ -99,6 +122,28 @@ const loadDishes = async () => {
     }
 };
 
+function addReadMoreFunctionality() {
+    document.querySelectorAll('.card-des').forEach(p => {
+        const existingLink = p.nextElementSibling?.classList.contains('read-more-link') ? p.nextElementSibling : null;
+        if (existingLink) existingLink.remove();
+
+        const isLongText = p.scrollHeight > p.clientHeight || p.textContent.length > 100;
+        if (isLongText) {
+            const readMoreLink = document.createElement('a');
+            readMoreLink.classList.add('read-more-link');
+            readMoreLink.textContent = 'Read More';
+            readMoreLink.href = '#';
+            p.insertAdjacentElement('afterend', readMoreLink);
+
+            readMoreLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                p.classList.toggle('expanded');
+                readMoreLink.textContent = p.classList.contains('expanded') ? 'Read Less' : 'Read More';
+            });
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
@@ -107,22 +152,30 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             console.log("User authenticated, UID:", user.uid);
             loadDishes();
+            updateCartNumber();
         }
     });
 });
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-    try {
-        await signOut(auth);
-        showSuccess("Logout", "You have been logged out.").then((result) => {
-            if (result.isConfirmed) {
-                setTimeout(() => {
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    Swal.fire({
+        icon: "warning",
+        title: "Confirm Logout",
+        text: "Are you sure you want to logout?",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            signOut(auth)
+                .then(() => {
+                    showSuccess("Logged Out", "You have been successfully logged out.");
                     window.location.href = "/index.html";
-                }, 1000);
-            }
-        })
-    } catch (error) {
-        console.error("Logout error:", error);
-        showError("Logout Error", error.message);
-    }
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                    showError("Logout Error", error.message);
+                });
+        }
+    });
 });

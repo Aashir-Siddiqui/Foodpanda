@@ -1,8 +1,8 @@
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc, onAuthStateChanged, getDoc } from './firebase.js';
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db, doc, setDoc, onAuthStateChanged, getDoc} from './firebase.js';
 
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
-const showWarning = (title, text) => Swal.fire({ icon: "warning", title, text });
+
 
 const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,38 +33,88 @@ let frontPage = document.querySelector(".FrontPage");
 
 let currentRole = "user";
 
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        console.log("User is logged in, UID:", user.uid);
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            const role = userDoc.data().role;
+            console.log("User role:", role);
+            signupBtn.disabled = true;
+            loginBtn.disabled = true;
+            adminSignupBtn.disabled = true;
+            signupBtn.style.opacity = "0.5";
+            loginBtn.style.opacity = "0.5";
+            adminSignupBtn.style.opacity = "0.5";
+            signupBtn.style.cursor = "not-allowed";
+            loginBtn.style.cursor = "not-allowed";
+            adminSignupBtn.style.cursor = "not-allowed";
+
+            signupBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                showWarning("Already Logged In", "Please logout to sign up with another account.");
+            });
+            loginBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                showWarning("Already Logged In", "Please logout to login with another account.");
+            });
+            adminSignupBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                showWarning("Already Logged In", "Please logout to sign up as admin.");
+            });
+        }
+    } else {
+        console.log("No user logged in");
+        signupBtn.disabled = false;
+        loginBtn.disabled = false;
+        adminSignupBtn.disabled = false;
+        signupBtn.style.opacity = "1";
+        loginBtn.style.opacity = "1";
+        adminSignupBtn.style.opacity = "1";
+        signupBtn.style.cursor = "pointer";
+        loginBtn.style.cursor = "pointer";
+        adminSignupBtn.style.cursor = "pointer";
+    }
+});
+
 signupBtn.addEventListener("click", () => {
-    signupCont.style.display = "block";
-    loginCont.style.display = "none";
-    body.style.overflowY = "hidden";
-    frontPage.style.opacity = "0.5";
-    frontPage.style.pointerEvents = "none";
-    currentRole = "user";
-    console.log("User Signup Clicked - Current Role:", currentRole);
-    signupCont.querySelector("#su-email").value = "";
-    signupCont.querySelector("#su-password").value = "";
+    if (!auth.currentUser) {
+        signupCont.style.display = "block";
+        loginCont.style.display = "none";
+        body.style.overflowY = "hidden";
+        frontPage.style.opacity = "0.5";
+        frontPage.style.pointerEvents = "none";
+        currentRole = "user";
+        console.log("User Signup Clicked - Current Role:", currentRole);
+        signupCont.querySelector("#su-email").value = "";
+        signupCont.querySelector("#su-password").value = "";
+    }
 });
 
 adminSignupBtn.addEventListener("click", () => {
-    signupCont.style.display = "block";
-    loginCont.style.display = "none";
-    body.style.overflowY = "hidden";
-    frontPage.style.opacity = "0.5";
-    frontPage.style.pointerEvents = "none";
-    currentRole = "admin";
-    console.log("Admin Signup Clicked - Current Role:", currentRole);
-    signupCont.querySelector("#su-email").value = "";
-    signupCont.querySelector("#su-password").value = "";
+    if (!auth.currentUser) {
+        signupCont.style.display = "block";
+        loginCont.style.display = "none";
+        body.style.overflowY = "hidden";
+        frontPage.style.opacity = "0.5";
+        frontPage.style.pointerEvents = "none";
+        currentRole = "admin";
+        console.log("Admin Signup Clicked - Current Role:", currentRole);
+        signupCont.querySelector("#su-email").value = "";
+        signupCont.querySelector("#su-password").value = "";
+    }
 });
 
 loginBtn.addEventListener("click", () => {
-    loginCont.style.display = "block";
-    signupCont.style.display = "none";
-    body.style.overflowY = "hidden";
-    frontPage.style.opacity = "0.5";
-    frontPage.style.pointerEvents = "none";
-    loginCont.querySelector("#li-email").value = "";
-    loginCont.querySelector("#li-password").value = "";
+    if (!auth.currentUser) {
+        loginCont.style.display = "block";
+        signupCont.style.display = "none";
+        body.style.overflowY = "hidden";
+        frontPage.style.opacity = "0.5";
+        frontPage.style.pointerEvents = "none";
+        loginCont.querySelector("#li-email").value = "";
+        loginCont.querySelector("#li-password").value = "";
+    }
 });
 
 document.querySelectorAll(".close-popup").forEach(closeBtn => {
@@ -80,25 +130,29 @@ document.querySelectorAll(".close-popup").forEach(closeBtn => {
 document.querySelectorAll(".switch-form").forEach(switchLink => {
     switchLink.addEventListener("click", (e) => {
         e.preventDefault();
-        const target = document.getElementById(switchLink.dataset.target);
-        signupCont.style.display = target.id === "signup-container" ? "block" : "none";
-        loginCont.style.display = target.id === "login-container" ? "block" : "none";
-        body.style.overflowY = "hidden";
-        frontPage.style.opacity = "0.5";
-        frontPage.style.pointerEvents = "none";
-        currentRole = target.id === "signup-container" ? "user" : currentRole;
-        console.log("Switch Form - Current Role:", currentRole);
+        if (!auth.currentUser) {
+            const target = document.getElementById(switchLink.dataset.target);
+            signupCont.style.display = target.id === "signup-container" ? "block" : "none";
+            loginCont.style.display = target.id === "login-container" ? "block" : "none";
+            body.style.overflowY = "hidden";
+            frontPage.style.opacity = "0.5";
+            frontPage.style.pointerEvents = "none";
+            currentRole = target.id === "signup-container" ? "user" : currentRole;
+            console.log("Switch Form - Current Role:", currentRole);
 
-        if (target.id === "signup-container") {
-            const emailInput = target.querySelector("#su-email");
-            const passwordInput = target.querySelector("#su-password");
-            if (emailInput) emailInput.value = "";
-            if (passwordInput) passwordInput.value = "";
-        } else if (target.id === "login-container") {
-            const emailInput = target.querySelector("#li-email");
-            const passwordInput = target.querySelector("#li-password");
-            if (emailInput) emailInput.value = "";
-            if (passwordInput) passwordInput.value = "";
+            if (target.id === "signup-container") {
+                const emailInput = target.querySelector("#su-email");
+                const passwordInput = target.querySelector("#su-password");
+                if (emailInput) emailInput.value = "";
+                if (passwordInput) passwordInput.value = "";
+            } else if (target.id === "login-container") {
+                const emailInput = target.querySelector("#li-email");
+                const passwordInput = target.querySelector("#li-password");
+                if (emailInput) emailInput.value = "";
+                if (passwordInput) passwordInput.value = "";
+            }
+        } else {
+            showWarning("Already Logged In", "Please logout to switch to another account.");
         }
     });
 });
@@ -132,19 +186,15 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
         });
         console.log("Firestore User Role Saved");
 
-        showSuccess("Signup Successful", `Welcome, ${user.email}!`).then((result) => {
-            if (result.isConfirmed) {
-                setTimeout(() => {
-                    signupCont.style.display = "none";
-                    body.style.overflowY = "auto";
-                    frontPage.style.opacity = "1";
-                    frontPage.style.pointerEvents = "auto";
-                    if (currentRole === "admin") {
-                        window.location.href = '/admin.html';
-                    } else {
-                        window.location.href = '/dishes.html';
-                    }
-                }, 1000);
+        showSuccess("Signup Successful", `Welcome, ${user.email}!`).then(() => {
+            signupCont.style.display = "none";
+            body.style.overflowY = "auto";
+            frontPage.style.opacity = "1";
+            frontPage.style.pointerEvents = "auto";
+            if (currentRole === "admin") {
+                window.location.href = '/admin.html';
+            } else {
+                window.location.href = '/dishes.html';
             }
         });
     } catch (error) {
@@ -176,22 +226,18 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
         const role = userDoc.data().role;
         console.log("Firestore Role:", role);
 
-        showSuccess("Login Successful", `Welcome back, ${user.email}!`).then((result) => {
-            if (result.isConfirmed) {
-                setTimeout(() => {
-                    loginCont.style.display = "none";
-                    body.style.overflowY = "auto";
-                    frontPage.style.opacity = "1";
-                    frontPage.style.pointerEvents = "auto";
-                    if (role === "admin") {
-                        window.location.href = '/admin.html';
-                    } else if (role === "user") {
-                        window.location.href = '/dishes.html';
-                    } else {
-                        console.warn("Invalid role detected:", role);
-                        window.location.href = '/dishes.html';
-                    }
-                }, 1000);
+        showSuccess("Login Successful", `Welcome back, ${user.email}!`).then(() => {
+            loginCont.style.display = "none";
+            body.style.overflowY = "auto";
+            frontPage.style.opacity = "1";
+            frontPage.style.pointerEvents = "auto";
+            if (role === "admin") {
+                window.location.href = '/admin.html';
+            } else if (role === "user") {
+                window.location.href = '/dishes.html';
+            } else {
+                console.warn("Invalid role detected:", role);
+                window.location.href = '/dishes.html';
             }
         });
     } catch (error) {
