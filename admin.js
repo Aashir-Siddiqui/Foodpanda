@@ -1,4 +1,4 @@
-import { auth, onAuthStateChanged, signOut, db, doc, getDoc, collection, addDoc, getDocs, query, orderBy, updateDoc, deleteDoc } from './firebase.js';
+import { auth, onAuthStateChanged, signOut, db, doc, getDoc, collection, addDoc, getDocs, query, orderBy, updateDoc, deleteDoc, where } from './firebase.js';
 
 const showError = (title, text) => Swal.fire({ icon: "error", title, text });
 const showSuccess = (title, text) => Swal.fire({ icon: "success", title, text });
@@ -13,13 +13,20 @@ const loadDishes = async () => {
 
     dishesList.innerHTML = '<p>Loading dishes...</p>';
     try {
-        const q = query(collection(db, "dishes"), orderBy("created_at", "desc"));
+        const user = auth.currentUser;
+        if (!user) throw new Error("User not logged in");
+
+        const q = query(
+            collection(db, "dishes"),
+            where("admin_uid", "==", user.uid),
+            orderBy("created_at", "desc")
+        );
         const querySnapshot = await getDocs(q);
         console.log("Fetched dishes count:", querySnapshot.size);
 
         dishesList.innerHTML = "";
         if (querySnapshot.empty) {
-            dishesList.innerHTML = '<p>No dishes found.</p>';
+            dishesList.innerHTML = '<p>No dishes found for this admin.</p>';
             return;
         }
 
@@ -32,8 +39,8 @@ const loadDishes = async () => {
                         <div class="card-img-container">
                             <img src="${dish.image_url || 'https://dummyimage.com/400x400/000/fff.png&text=No+Image+Available'}" class="card-img-top" alt="${dish.name}" onerror="this.src='https://dummyimage.com/400x400/000/fff.png&text=Image+Not+Found'">
                             <div class="card-img-overlay admin-only">
-                                <button class="btn-admin btn-edit" data-id="${dishId}" data-bs-toggle="modal" data-bs-target="#editDishModal"><i class="fa-regular fa-pen-to-square"></i></button>
-                                <button class="btn-admin btn-delete" data-id="${dishId}"><i class="fa-regular fa-trash-can"></i></button>
+                                <button class="btn-admin btn-delete" data-id="${dishId}"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="btn-admin btn-edit" data-id="${dishId}" data-bs-toggle="modal" data-bs-target="#editDishModal"><i class="fa-solid fa-pen-to-square"></i></button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -48,8 +55,8 @@ const loadDishes = async () => {
             dishesList.innerHTML += card;
         });
 
-        addReadMoreFunctionality()
-        
+        addReadMoreFunctionality();
+
         document.querySelectorAll(".btn-edit").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 const dishId = e.currentTarget.dataset.id;
@@ -98,13 +105,14 @@ const loadDishes = async () => {
                 });
             });
         });
+
     } catch (error) {
         console.error("Error loading dishes:", error);
         dishesList.innerHTML = "";
-        if (error.code === "permission-denied") {
-            showError("Access Denied", "You don't have permission to view dishes.");
-        } else if (error.code === "unavailable") {
-            showError("Network Error", "Failed to connect to the server.");
+        if (error.code === "failed-precondition" && error.message.includes("index")) {
+            showError("Index Required", "This query requires a Firestore index. Please create it in the Firebase Console and try again.");
+        } else if (error.code === "permission-denied") {
+            showError("Access Denied", "You don't have permission to view these dishes.");
         } else {
             showError("Error", `Failed to load dishes: ${error.message}`);
         }
@@ -185,7 +193,8 @@ document.getElementById("saveDishBtn").addEventListener("click", async () => {
             description: dishDescription,
             category: dishCategory,
             image_url: dishImageUrl,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            admin_uid: user.uid
         };
 
         const docRef = await addDoc(collection(db, "dishes"), dishData);
@@ -228,7 +237,8 @@ document.getElementById("updateDishBtn").addEventListener("click", async () => {
             description: dishDescription,
             category: dishCategory,
             image_url: dishImageUrl,
-            created_at: currentDish.created_at
+            created_at: currentDish.created_at,
+            admin_uid: currentDish.admin_uid
         };
 
         await updateDoc(dishRef, updatedDishData);

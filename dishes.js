@@ -33,6 +33,9 @@ const loadDishes = async () => {
 
     dishesShowList.innerHTML = '<p>Loading dishes...</p>';
     try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("User not logged in");
+        
         const q = query(collection(db, "dishes"), orderBy("created_at", "desc"));
         const querySnapshot = await getDocs(q);
         console.log("Fetched dishes count:", querySnapshot.size);
@@ -113,9 +116,9 @@ const loadDishes = async () => {
         console.error("Error loading dishes:", error);
         dishesShowList.innerHTML = "";
         if (error.code === "permission-denied") {
-            showError("Access Denied", "You don't have permission to view dishes.");
+            showError("Access Denied", "You don't have permission to view dishes. Please contact support.");
         } else if (error.code === "unavailable") {
-            showError("Network Error", "Failed to connect to the server.");
+            showError("Network Error", "Failed to connect to the server. Please check your internet connection.");
         } else {
             showError("Error", `Failed to load dishes: ${error.message}`);
         }
@@ -148,7 +151,8 @@ document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             console.log("No user logged in, redirecting to index.html");
-            window.location.href = "/index.html";
+            showError("Access Denied", "Please log in to view dishes.");
+            setTimeout(() => window.location.href = "/index.html", 2000);
         } else {
             console.log("User authenticated, UID:", user.uid);
             loadDishes();
